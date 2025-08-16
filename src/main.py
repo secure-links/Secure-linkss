@@ -10,6 +10,7 @@ from src.routes.user import user_bp
 from src.routes.auth import auth_bp
 from src.routes.links import links_bp
 from src.routes.track import track_bp
+from src.routes.events import events_bp
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'ej5B3Amppi4gjpbC65te6rJuvJzgVCWW_xfB-ZLR1TE')
@@ -22,6 +23,7 @@ app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(auth_bp, url_prefix='/api')
 app.register_blueprint(links_bp, url_prefix='/api')
 app.register_blueprint(track_bp)
+app.register_blueprint(events_bp)
 
 # Database configuration - use PostgreSQL in production, SQLite for development
 database_url = os.environ.get('DATABASE_URL')
