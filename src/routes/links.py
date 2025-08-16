@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify, session
-from src.models.user import db, User, TrackingLink, AnalyticsSummary
+from src.models.user import db, User
+from src.models.link import Link
+from src.models.tracking_event import TrackingEvent
 import string
 import random
 import json
@@ -28,25 +30,21 @@ def links():
     
     if request.method == 'GET':
         # Get all links for the current user
-        links = TrackingLink.query.filter_by(user_id=user.id).order_by(TrackingLink.created_at.desc()).all()
+        links = Link.query.filter_by(user_id=user.id).order_by(Link.created_at.desc()).all()
         
         links_data = []
         for link in links:
             link_dict = link.to_dict()
-            # Add analytics data
-            analytics = AnalyticsSummary.query.filter_by(link_id=link.id).first()
-            if analytics:
-                link_dict.update({
-                    'total_clicks': analytics.total_clicks,
-                    'real_visitors': analytics.real_visitors,
-                    'blocked_attempts': analytics.blocked_attempts
-                })
-            else:
-                link_dict.update({
-                    'total_clicks': 0,
-                    'real_visitors': 0,
-                    'blocked_attempts': 0
-                })
+            # Get analytics data
+            total_clicks = TrackingEvent.query.filter_by(link_id=link.id).count()
+            real_visitors = TrackingEvent.query.filter_by(link_id=link.id, is_bot=False).count()
+            blocked_attempts = TrackingEvent.query.filter_by(link_id=link.id, status="blocked").count()
+
+            link_dict.update({
+                "total_clicks": total_clicks,
+                "real_visitors": real_visitors,
+                "blocked_attempts": blocked_attempts
+            })
             
             # Add tracking URL
             link_dict['tracking_url'] = f"https://{request.host}/t/{link.short_code}"
@@ -80,7 +78,7 @@ def links():
         # Generate unique short code
         while True:
             short_code = generate_short_code()
-            existing = TrackingLink.query.filter_by(short_code=short_code).first()
+            existing = Link.query.filter_by(short_code=short_code).first()
             if not existing:
                 break
         
@@ -103,10 +101,7 @@ def links():
             db.session.add(link)
             db.session.commit()
             
-            # Initialize analytics summary
-            analytics = AnalyticsSummary(link_id=link.id)
-            db.session.add(analytics)
-            db.session.commit()
+
             
             return jsonify({
                 'success': True,
