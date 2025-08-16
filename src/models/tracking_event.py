@@ -18,6 +18,7 @@ class TrackingEvent(db.Model):
     email_opened = db.Column(db.Boolean, default=False)
     redirected = db.Column(db.Boolean, default=False)
     on_page = db.Column(db.Boolean, default=False)
+    is_bot = db.Column(db.Boolean, default=False)  # Track if visitor is a bot
 
     def __repr__(self):
         return f"<TrackingEvent {self.id} for link {self.link_id}>"
@@ -39,7 +40,8 @@ class TrackingEvent(db.Model):
             "unique_id": self.unique_id,
             "email_opened": self.email_opened,
             "redirected": self.redirected,
-            "on_page": self.on_page
+            "on_page": self.on_page,
+            "is_bot": self.is_bot
         }
 
 
