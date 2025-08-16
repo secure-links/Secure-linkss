@@ -58,9 +58,5 @@ def serve(path):
         else:
             return "index.html not found", 404
 
-# Vercel serverless function handler
-def handler(request):
-    return app(request.environ, lambda status, headers: None)
-
 if __name__ == '__main__':
    app.run(host=\'0.0.0.0\', port=5000, debug=False)
