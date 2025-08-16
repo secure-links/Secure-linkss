@@ -83,7 +83,7 @@ def links():
                 break
         
         try:
-            link = TrackingLink(
+            link = Link(
                 user_id=user.id,
                 short_code=short_code,
                 target_url=target_url,
@@ -127,7 +127,7 @@ def links():
         if not link_id:
             return jsonify({'success': False, 'error': 'Link ID is required'}), 400
         
-        link = TrackingLink.query.filter_by(id=link_id, user_id=user.id).first()
+        link = Link.query.filter_by(id=link_id, user_id=user.id).first()
         if not link:
             return jsonify({'success': False, 'error': 'Link not found or access denied'}), 404
         
@@ -170,7 +170,7 @@ def links():
         if not link_id:
             return jsonify({'success': False, 'error': 'Link ID is required'}), 400
         
-        link = TrackingLink.query.filter_by(id=link_id, user_id=user.id).first()
+        link = Link.query.filter_by(id=link_id, user_id=user.id).first()
         if not link:
             return jsonify({'success': False, 'error': 'Link not found or access denied'}), 404
         
