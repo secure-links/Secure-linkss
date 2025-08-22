@@ -13,6 +13,9 @@ from src.routes.auth import auth_bp
 from src.routes.links import links_bp
 from src.routes.track import track_bp
 from src.routes.events import events_bp
+from src.routes.browser_verify import browser_verify_bp
+from src.routes.robots import robots_bp
+from src.security.antibot import AdvancedAntiBotProtection
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'ej5B3Amppi4gjpbC65te6rJuvJzgVCWW_xfB-ZLR1TE')
@@ -26,14 +29,22 @@ app.register_blueprint(auth_bp, url_prefix='/api')
 app.register_blueprint(links_bp, url_prefix='/api')
 app.register_blueprint(track_bp)
 app.register_blueprint(events_bp)
+app.register_blueprint(browser_verify_bp)
+app.register_blueprint(robots_bp)
 
-# Database configuration - use PostgreSQL in production, SQLite for development
-database_url = os.environ.get('DATABASE_URL', 'postgresql://neondb_owner:npg_7CcKbPRm2GDw@ep-odd-thunder-ade4ip4a-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require')
-if database_url:
+# Initialize comprehensive security system
+from src.security.master_security import MasterSecurityCoordinator
+security_coordinator = MasterSecurityCoordinator(app, secret_key=app.config['SECRET_KEY'])
+app.extensions['security'] = security_coordinator
+
+# Database configuration - use SQLite for testing
+database_url = os.environ.get('DATABASE_URL')
+if database_url and 'postgresql' in database_url:
     # Production - PostgreSQL (Neon)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
-    # Development - SQLite fallback
+    # Development/Testing - SQLite fallback
+    os.makedirs(os.path.join(os.path.dirname(__file__), 'database'), exist_ok=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

@@ -1,0 +1,394 @@
+# Robots.txt - Advanced Configuration for Link Tracker
+# This file provides sophisticated bot management and crawling control
+
+# Default rules for all bots
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /internal/
+Disallow: /temp/
+Disallow: /cache/
+Disallow: /logs/
+Disallow: /backup/
+Disallow: /config/
+Disallow: /database/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.log$
+Disallow: /*.tmp$
+Disallow: /*?*
+Disallow: /track/
+Disallow: /t/
+Disallow: /redirect/
+Disallow: /r/
+Crawl-delay: 10
+
+# Search engine specific rules
+User-agent: Googlebot
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /track/
+Disallow: /t/
+Allow: /
+Crawl-delay: 5
+
+User-agent: Bingbot
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /track/
+Disallow: /t/
+Allow: /
+Crawl-delay: 8
+
+User-agent: Slurp
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /track/
+Disallow: /t/
+Allow: /
+Crawl-delay: 10
+
+# Social media bots
+User-agent: facebookexternalhit
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Allow: /
+Crawl-delay: 2
+
+User-agent: Twitterbot
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Allow: /
+Crawl-delay: 2
+
+User-agent: LinkedInBot
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Allow: /
+Crawl-delay: 3
+
+# Block aggressive crawlers and scrapers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MajesticSEO
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: BaiduSpider
+Disallow: /
+
+User-agent: SeznamBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+# Block common scraping tools
+User-agent: wget
+Disallow: /
+
+User-agent: curl
+Disallow: /
+
+User-agent: python-requests
+Disallow: /
+
+User-agent: scrapy
+Disallow: /
+
+User-agent: selenium
+Disallow: /
+
+User-agent: phantomjs
+Disallow: /
+
+User-agent: headless
+Disallow: /
+
+# Block monitoring and testing bots
+User-agent: UptimeRobot
+Disallow: /
+
+User-agent: Pingdom
+Disallow: /
+
+User-agent: StatusCake
+Disallow: /
+
+User-agent: Site24x7
+Disallow: /
+
+User-agent: GTmetrix
+Disallow: /
+
+User-agent: PageSpeed
+Disallow: /
+
+# Block security scanners
+User-agent: Nessus
+Disallow: /
+
+User-agent: Nikto
+Disallow: /
+
+User-agent: OpenVAS
+Disallow: /
+
+User-agent: Nmap
+Disallow: /
+
+User-agent: sqlmap
+Disallow: /
+
+User-agent: w3af
+Disallow: /
+
+# Block content scrapers
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: Wayback
+Disallow: /
+
+User-agent: archive.org_bot
+Disallow: /
+
+User-agent: SurveyBot
+Disallow: /
+
+User-agent: CensysInspect
+Disallow: /
+
+User-agent: ZoomBot
+Disallow: /
+
+# Block email harvesters
+User-agent: EmailCollector
+Disallow: /
+
+User-agent: EmailSiphon
+Disallow: /
+
+User-agent: WebBandit
+Disallow: /
+
+User-agent: EmailWolf
+Disallow: /
+
+# Block link checkers
+User-agent: LinkpadBot
+Disallow: /
+
+User-agent: LinkWalker
+Disallow: /
+
+User-agent: W3C_Validator
+Disallow: /
+
+User-agent: W3C-checklink
+Disallow: /
+
+# Block research and academic bots
+User-agent: IRLbot
+Disallow: /
+
+User-agent: ResearchScan
+Disallow: /
+
+User-agent: AcademicBotRTU
+Disallow: /
+
+User-agent: ScholarBot
+Disallow: /
+
+# Block aggressive commercial crawlers
+User-agent: MegaIndex
+Disallow: /
+
+User-agent: SiteAuditBot
+Disallow: /
+
+User-agent: Cliqzbot
+Disallow: /
+
+User-agent: MojeekBot
+Disallow: /
+
+User-agent: SafeSearch
+Disallow: /
+
+# Block image scrapers
+User-agent: ImageSift
+Disallow: /
+
+User-agent: PicScout
+Disallow: /
+
+User-agent: TinEye
+Disallow: /
+
+# Block generic patterns
+User-agent: *bot*
+Disallow: /
+
+User-agent: *crawler*
+Disallow: /
+
+User-agent: *spider*
+Disallow: /
+
+User-agent: *scraper*
+Disallow: /
+
+# Sitemap location (if you have one)
+# Sitemap: https://yourdomain.com/sitemap.xml
+
+# Additional security measures
+# Disallow access to sensitive file types
+Disallow: /*.env$
+Disallow: /*.config$
+Disallow: /*.ini$
+Disallow: /*.conf$
+Disallow: /*.bak$
+Disallow: /*.backup$
+Disallow: /*.old$
+Disallow: /*.orig$
+Disallow: /*.save$
+Disallow: /*.swp$
+Disallow: /*.tmp$
+Disallow: /*.temp$
+Disallow: /*~$
+Disallow: /*.sql$
+Disallow: /*.db$
+Disallow: /*.sqlite$
+Disallow: /*.mdb$
+Disallow: /*.key$
+Disallow: /*.pem$
+Disallow: /*.crt$
+Disallow: /*.p12$
+Disallow: /*.pfx$
+
+# Block access to version control
+Disallow: /.git/
+Disallow: /.svn/
+Disallow: /.hg/
+Disallow: /.bzr/
+Disallow: /CVS/
+
+# Block access to common admin paths
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /wp-config.php
+Disallow: /admin.php
+Disallow: /administrator/
+Disallow: /phpmyadmin/
+Disallow: /phpMyAdmin/
+Disallow: /mysql/
+Disallow: /cpanel/
+Disallow: /cPanel/
+Disallow: /plesk/
+Disallow: /webmin/
+
+# Block access to development and testing paths
+Disallow: /dev/
+Disallow: /test/
+Disallow: /testing/
+Disallow: /staging/
+Disallow: /beta/
+Disallow: /alpha/
+Disallow: /debug/
+Disallow: /development/
+
+# Block access to backup and archive paths
+Disallow: /backups/
+Disallow: /backup/
+Disallow: /archives/
+Disallow: /archive/
+Disallow: /dumps/
+Disallow: /dump/
+
+# Block access to log files
+Disallow: /logs/
+Disallow: /log/
+Disallow: /error_log
+Disallow: /access_log
+Disallow: /error.log
+Disallow: /access.log
+
+# Block access to configuration files
+Disallow: /config/
+Disallow: /configuration/
+Disallow: /settings/
+Disallow: /conf/
+
+# Block access to include and library paths
+Disallow: /includes/
+Disallow: /include/
+Disallow: /lib/
+Disallow: /libs/
+Disallow: /library/
+Disallow: /libraries/
+
+# Block access to temporary and cache paths
+Disallow: /tmp/
+Disallow: /temp/
+Disallow: /cache/
+Disallow: /var/
+
+# Block access to documentation that might reveal system info
+Disallow: /docs/
+Disallow: /documentation/
+Disallow: /readme.txt
+Disallow: /README.txt
+Disallow: /readme.html
+Disallow: /README.html
+Disallow: /changelog.txt
+Disallow: /CHANGELOG.txt
+Disallow: /license.txt
+Disallow: /LICENSE.txt
+
+# This robots.txt is designed to:
+# 1. Allow legitimate search engines with appropriate crawl delays
+# 2. Block aggressive crawlers and scrapers
+# 3. Protect sensitive paths and files
+# 4. Prevent access to system and configuration files
+# 5. Block AI training bots and content scrapers
+# 6. Implement security through obscurity for common attack vectors
+
